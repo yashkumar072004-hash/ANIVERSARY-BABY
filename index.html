@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Our Love Story ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins;
+}
+
+body{
+background:#0b0b14;
+color:white;
+overflow-x:hidden;
+}
+
+/* intro */
+
+#intro{
+position:fixed;
+width:100%;
+height:100vh;
+background:black;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+z-index:999;
+animation:fadeOut 3s forwards;
+animation-delay:4s;
+}
+
+#intro h1{
+font-family:"Great Vibes";
+font-size:70px;
+}
+
+@keyframes fadeOut{
+to{opacity:0;visibility:hidden;}
+}
+
+/* password */
+
+#passwordPage{
+height:100vh;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+background:black;
+text-align:center;
+}
+
+#main{
+display:none;
+}
+
+/* hero */
+
+.hero{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+text-align:center;
+}
+
+.hero h1{
+font-family:"Great Vibes";
+font-size:70px;
+}
+
+/* canvas */
+
+#heartCanvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
+}
+
+/* scroll sections */
+
+.section{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:50px;
+opacity:0;
+transform:translateY(100px);
+transition:1s;
+text-align:center;
+}
+
+.section.show{
+opacity:1;
+transform:translateY(0);
+}
+
+/* timeline */
+
+.timeline{
+padding:100px 20px;
+max-width:900px;
+margin:auto;
+text-align:center;
+}
+
+.memory{
+margin:80px 0;
+}
+
+.memory img{
+width:260px;
+border-radius:20px;
+box-shadow:0 20px 40px rgba(0,0,0,0.5);
+}
+
+/* quiz */
+
+.quiz{
+padding:80px 20px;
+text-align:center;
+background:#141428;
+}
+
+/* buttons */
+
+button{
+padding:12px 28px;
+border:none;
+border-radius:30px;
+font-size:18px;
+cursor:pointer;
+margin:10px;
+}
+
+#yes{
+background:#00ffa6;
+color:black;
+}
+
+#no{
+background:#ff2f4a;
+color:white;
+position:absolute;
+}
+
+.result{
+display:none;
+font-size:28px;
+margin-top:20px;
+}
+
+/* floating hearts */
+
+.heart{
+position:fixed;
+bottom:-10px;
+font-size:20px;
+animation:float 6s linear infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(0)}
+100%{transform:translateY(-110vh)}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- intro -->
+
+<div id="intro">
+
+<h1>Our Love Story ❤️</h1>
+<p>Every moment with you is magical</p>
+
+</div>
+
+<!-- password -->
+
+<div id="passwordPage">
+
+<h1>Private Love Page ❤️</h1>
+
+<p>Enter our secret date</p>
+
+<input type="password" id="pass">
+
+<br>
+
+<button onclick="checkPassword()">Enter</button>
+
+</div>
+
+<!-- main -->
+
+<div id="main">
+
+<canvas id="heartCanvas"></canvas>
+
+<!-- hero -->
+
+<section class="hero">
+
+<h1>Happy Anniversary ❤️</h1>
+
+<button onclick="speakLove()">Hear My Love Message 🎙</button>
+
+</section>
+
+<!-- cinematic story -->
+
+<section class="section">The Day We Met ❤️</section>
+<section class="section">Our First Date 💕</section>
+<section class="section">Our Beautiful Journey ✨</section>
+
+<!-- photo timeline -->
+
+<section class="timeline">
+
+<h1>Our Memories 📸</h1>
+
+<div class="memory">
+<img src="photo1.jpg">
+<p>First photo together</p>
+</div>
+
+<div class="memory">
+<img src="photo2.jpg">
+<p>Our first trip</p>
+</div>
+
+<div class="memory">
+<img src="photo3.jpg">
+<p>Beautiful memories together</p>
+</div>
+
+</section>
+
+<!-- ai message -->
+
+<section class="quiz">
+
+<h2>khush baby</h2>
+
+<p id="loveMsg"></p>
+
+<button onclick="generateLove()">ya la jitni tarif chaeya lale</button>
+
+</section>
+
+<!-- quiz -->
+
+<section class="quiz">
+
+<h2>Love Quiz 💖</h2>
+
+<p>Who loves you the most?</p>
+
+<button onclick="correct()">You</button>
+<button onclick="correct()">Me</button>
+<button onclick="correct()">Both</button>
+
+<p id="quizResult"></p>
+
+</section>
+
+<!-- proposal -->
+
+<section class="hero">
+
+<h1>Will You Stay With Me Forever? 💍</h1>
+
+<div style="position:relative;height:80px">
+
+<button id="yes" onclick="yes()">Yes ❤️</button>
+
+<button id="no">No 😢</button>
+
+</div>
+
+<div class="result" id="result">
+You are my forever ❤️
+</div>
+
+</section>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+
+/* password */
+
+function checkPassword(){
+
+const pass=document.getElementById("pass").value;
+
+if(pass==="0101"){
+
+document.getElementById("passwordPage").style.display="none";
+document.getElementById("main").style.display="block";
+
+}else{
+
+alert("Wrong password ❤️");
+
+}
+
+}
+
+/* 3D heart */
+
+const scene=new THREE.Scene();
+
+const camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+
+const renderer=new THREE.WebGLRenderer({
+canvas:document.getElementById("heartCanvas"),
+alpha:true
+});
+
+renderer.setSize(window.innerWidth,window.innerHeight);
+
+const geometry=new THREE.TorusKnotGeometry(1,0.35,120,16);
+
+const material=new THREE.MeshStandardMaterial({color:0xff4d6d});
+
+const heart=new THREE.Mesh(geometry,material);
+
+scene.add(heart);
+
+const light=new THREE.PointLight(0xffffff,1);
+light.position.set(5,5,5);
+
+scene.add(light);
+
+camera.position.z=4;
+
+function animate(){
+
+requestAnimationFrame(animate);
+
+heart.rotation.x+=0.01;
+heart.rotation.y+=0.01;
+
+renderer.render(scene,camera);
+
+}
+
+animate();
+
+/* scroll animation */
+
+const sections=document.querySelectorAll(".section");
+
+window.addEventListener("scroll",()=>{
+
+sections.forEach(sec=>{
+
+const top=sec.getBoundingClientRect().top;
+
+if(top<window.innerHeight-100){
+
+sec.classList.add("show");
+
+}
+
+});
+
+});
+
+/* ai love message */
+
+const messages=[
+
+"You are the best thing that ever happened to me ❤️",
+"My life became beautiful when you entered it ❤️",
+"I promise to love you forever ❤️",
+"You are my favorite person in the world ❤️"
+
+];
+
+function generateLove(){
+
+const msg=messages[Math.floor(Math.random()*messages.length)];
+
+document.getElementById("loveMsg").innerText=msg;
+
+}
+
+/* voice */
+
+function speakLove(){
+
+const msg=new SpeechSynthesisUtterance(
+"Happy Anniversary my Puchu Aaj ka din mere liye bahut special hai, kyunki aaj ke din meri life me tum aayi thi. Main tumse bahut zyada pyaar karta hu, shayad itna ki words me properly express bhi nahi kar pata. Tum meri life ki sabse beautiful cheez ho.Jab bhi main tumhare baare me sochta hu na, automatically smile aa jati hai. Tum meri happiness ho, meri peace ho, aur meri sabse pyari dost bhi. Main bas itna kehna chahta hu ki main tumse bahut pyaar karta hu Puchu, aur hamesha karta rahunga. Chahe life me kuch bhi ho, main hamesha tumhare saath khada rahunga.Happy Anniversary meri jaan Aur haan… aaja Pochinki me, tumhara wait kar raha hu"
+);
+
+speechSynthesis.speak(msg);
+
+}
+
+/* quiz */
+
+function correct(){
+
+document.getElementById("quizResult").innerText="Correct ❤️";
+
+}
+
+/* no button run */
+
+const noBtn=document.getElementById("no");
+
+noBtn.addEventListener("mouseover",()=>{
+
+const x=Math.random()*300-150;
+const y=Math.random()*200-100;
+
+noBtn.style.transform=`translate(${x}px,${y}px)`;
+
+});
+
+/* yes fireworks */
+
+function yes(){
+
+document.getElementById("result").style.display="block";
+
+confetti({
+particleCount:200,
+spread:120,
+origin:{y:0.6}
+});
+
+}
+
+/* floating hearts */
+
+function createHeart(){
+
+const heart=document.createElement("div");
+
+heart.classList.add("heart");
+
+heart.innerHTML="❤️";
+
+heart.style.left=Math.random()*100+"vw";
+
+document.body.appendChild(heart);
+
+setTimeout(()=>heart.remove(),6000);
+
+}
+
+setInterval(createHeart,400);
+
+</script>
+
+</body>
+</html>
